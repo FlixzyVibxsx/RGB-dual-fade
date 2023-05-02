@@ -1,0 +1,34 @@
+
+game:GetService("UserInputService").InputBegan:Connect(function(input, processed)
+    if not processed and input.KeyCode == toggleKeyCode then
+        scriptEnabled = not scriptEnabled
+    end
+end)
+
+
+while task.wait() do
+    if scriptEnabled then
+        local time = tick()
+        local transitionProgress = (math.sin(2 * math.pi * frequency * time) * amplitude + 0.5) * transitionTime
+        local isTransitioning = transitionProgress < transitionTime
+        
+        local red, green, blue
+        if isTransitioning then
+            local transitionRatio = transitionProgress / transitionTime
+            red = math.floor(offset1[1] * (1 - transitionRatio) + offset2[1] * transitionRatio)
+            green = math.floor(offset1[2] * (1 - transitionRatio) + offset2[2] * transitionRatio)
+            blue = math.floor(offset1[3] * (1 - transitionRatio) + offset2[3] * transitionRatio)
+        else
+            red = offset1[1]
+            green = offset1[2]
+            blue = offset1[3]
+        end
+		local color = Color3.fromRGB(red, green, blue)
+        local G_1 = "customize"
+        
+        local G_4 = "Body"
+        game:GetService("ReplicatedStorage").MasterKey:FireServer(G_1, G_2, color, G_4)
+    else
+        wait()
+    end
+end
